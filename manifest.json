@@ -1,0 +1,25 @@
+{
+  "name": "PhysicsAR — Физика Зертханасы",
+  "short_name": "PhysicsAR",
+  "description": "Kazakh physics PWA with labs, AR mode and AI assistant",
+  "start_url": "/index.html#login",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#00d4ff",
+  "background_color": "#060912",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23060912'/%3E%3Cg fill='none' stroke='%2300d4ff' stroke-width='18'%3E%3Cellipse cx='256' cy='256' rx='190' ry='72'/%3E%3Cellipse cx='256' cy='256' rx='72' ry='190' transform='rotate(60 256 256)'/%3E%3Cellipse cx='256' cy='256' rx='72' ry='190' transform='rotate(-60 256 256)'/%3E%3C/g%3E%3Ccircle cx='256' cy='256' r='24' fill='%2300ff9d'/%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='110' fill='%23060912'/%3E%3Cg fill='none' stroke='%2300d4ff' stroke-width='18'%3E%3Cellipse cx='256' cy='256' rx='190' ry='72'/%3E%3Cellipse cx='256' cy='256' rx='72' ry='190' transform='rotate(60 256 256)'/%3E%3Cellipse cx='256' cy='256' rx='72' ry='190' transform='rotate(-60 256 256)'/%3E%3C/g%3E%3Ccircle cx='256' cy='256' r='24' fill='%2300ff9d'/%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
