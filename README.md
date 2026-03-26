@@ -19,6 +19,7 @@ physics-ar/
 1. Install dependencies:
    ```bash
    npm install jose openai
+   npm install @vercel/kv jose openai
    ```
 2. Copy env file:
    ```bash
@@ -73,6 +74,30 @@ Optional:
 ## Security note
 
 If any token was shared publicly (chat/screenshot/commit), rotate it in Upstash immediately and update Vercel env values.
+## Vercel KV setup
+
+1. In Vercel Dashboard, open your project.
+2. Go to **Storage** tab.
+3. Click **Create Database** → choose **KV**.
+4. Attach KV to the project.
+5. Vercel will provide `KV_REST_API_URL` and `KV_REST_API_TOKEN`.
+
+## Environment variables in Vercel
+
+In **Project Settings → Environment Variables**, add:
+
+- `OPENAI_API_KEY`
+- `JWT_SECRET`
+- `KV_REST_API_URL`
+- `KV_REST_API_TOKEN`
+
+Use `.env.example` as a template.
+
+## Production deploy
+
+```bash
+vercel --prod
+```
 
 ## Notes
 

@@ -1,4 +1,5 @@
 import crypto from 'node:crypto';
+import { kv } from '@vercel/kv';
 import { SignJWT } from 'jose';
 
 const enc = new TextEncoder();
@@ -91,6 +92,12 @@ export default async function handler(req, res) {
   try {
     if (action === 'register') {
       const existing = await getUser(normalizedEmail);
+  if (!action || !normalizedEmail || !password) return json(res, 400, { error: 'Қажетті өрістер толтырылмаған' });
+
+  try {
+    if (action === 'register') {
+      const key = `user:${normalizedEmail}`;
+      const existing = await kv.get(key);
       if (existing) return json(res, 409, { error: 'Пайдаланушы бар' });
 
       const user = {
@@ -101,6 +108,10 @@ export default async function handler(req, res) {
       };
 
       await setUser(normalizedEmail, user);
+        passwordHash: password,
+        createdAt: new Date().toISOString()
+      };
+      await kv.set(key, user);
       return json(res, 200, { success: true });
     }
 
@@ -110,6 +121,9 @@ export default async function handler(req, res) {
       if (!user || user.passwordHash !== inputHash) {
         return json(res, 401, { error: 'Email немесе құпиясөз қате' });
       }
+      const key = `user:${normalizedEmail}`;
+      const user = await kv.get(key);
+      if (!user || user.passwordHash !== password) return json(res, 401, { error: 'Email немесе құпиясөз қате' });
 
       const secret = process.env.JWT_SECRET;
       if (!secret) return json(res, 500, { error: 'JWT_SECRET бапталмаған' });
