@@ -8,22 +8,49 @@ function json(res, code, body) {
   res.end(JSON.stringify(body));
 }
 
+function tokenFromRedisUrl(redisUrl) {
+  if (!redisUrl) return '';
+  try {
+    const parsed = new URL(redisUrl);
+    return decodeURIComponent(parsed.password || '');
+  } catch {
+    return '';
+  }
+}
+
+function restUrlFromRedisUrl(redisUrl) {
+  if (!redisUrl) return '';
+  try {
+    const parsed = new URL(redisUrl);
+    return `https://${parsed.hostname}`;
+  } catch {
+    return '';
+  }
+}
+
 function getRedisConfig() {
-  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
-  if (!url || !token) throw new Error('Redis env vars not configured');
-  return { url, token };
+  const redisUrl = process.env.REDIS_URL || process.env.KV_URL || '';
+  const writeUrl = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL || restUrlFromRedisUrl(redisUrl);
+  const writeToken = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN || tokenFromRedisUrl(redisUrl);
+  const readToken = process.env.KV_REST_API_READ_ONLY_TOKEN || writeToken;
+
+  if (!writeUrl || !writeToken) throw new Error('Redis env vars not configured');
+  return { writeUrl, writeToken, readToken };
 }
 
 async function redisCommand(command, ...args) {
-  const { url, token } = getRedisConfig();
-  const response = await fetch(url, {
+  const upper = String(command).toUpperCase();
+  const { writeUrl, writeToken, readToken } = getRedisConfig();
+  const isReadOnlyCmd = upper === 'GET';
+  const token = isReadOnlyCmd ? readToken : writeToken;
+
+  const response = await fetch(writeUrl, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify([command, ...args])
+    body: JSON.stringify([upper, ...args])
   });
 
   if (!response.ok) {
